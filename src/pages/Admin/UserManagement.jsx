@@ -14,7 +14,7 @@ const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
 
-  const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
 
   useEffect(() => {
     fetchUsers();

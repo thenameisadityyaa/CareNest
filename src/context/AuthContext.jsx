@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const mappedRole = userRole === 'care manager' ? 'manager' : userRole;
 
   useEffect(() => {
-    const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
     if (token) {
       fetch(`${BACKEND}/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
     const res = await fetch(`${BACKEND}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, role, patientId) => {
-    const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
     const res = await fetch(`${BACKEND}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -18,7 +18,7 @@ const PatientLookup = ({ onFound, token, onLogout }) => {
   const [error,   setError]   = useState('');
   const [found,   setFound]   = useState(null);   // preview before confirm
 
-  const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
 
   const handleSearch = async (e) => {
     e.preventDefault();

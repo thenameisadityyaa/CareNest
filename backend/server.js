@@ -73,18 +73,33 @@ app.use('/api/admin', adminRoutes);
 app.get('/', (req, res) => res.send('CareNest API is running...'));
 
 // ─── Database + Start ─────────────────────────────────────────────────────────
+let cachedDb = null;
+
+const connectDB = async () => {
+  if (cachedDb) return cachedDb;
+
+  try {
+    const db = await mongoose.connect(MONGO_URI);
+    cachedDb = db;
+    console.log('✅ Connected to MongoDB');
+    return db;
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err);
+    throw err;
+  }
+};
+
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  mongoose.connect(MONGO_URI)
-    .then(() => {
-      console.log('Connected to MongoDB');
-      server.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-      });
-    })
-    .catch(err => console.error('MongoDB error:', err));
+  connectDB().then(() => {
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  });
 } else {
   // On Vercel, we connect to DB on first request (Serverless style)
-  mongoose.connect(MONGO_URI);
+  // Express handles the async call if we await in middleware or routes,
+  // but here we just trigger it. Mongoose 5.x+ buffers commands.
+  connectDB();
 }
 
 module.exports = app;

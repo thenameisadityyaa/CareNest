@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext';
 const HealthDataContext = createContext();
 export const useHealthData = () => useContext(HealthDataContext);
 
-const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
 
 export const HealthDataProvider = ({ children }) => {
   const { user, token } = useAuth();

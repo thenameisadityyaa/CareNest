@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setStatus({ loading: true, message: '', error: false, link: '' });
     
-    const BACKEND = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const BACKEND = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
     try {
       const res = await fetch(`${BACKEND}/auth/forgot-password`, {
         method: 'POST',

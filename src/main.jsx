@@ -4,12 +4,16 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { HealthDataProvider } from './context/HealthDataContext.jsx'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <HealthDataProvider>
         <App />
+        <Analytics />
+        <SpeedInsights />
       </HealthDataProvider>
     </AuthProvider>
   </StrictMode>,
