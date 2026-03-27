@@ -11,8 +11,8 @@ const patientSchema = new mongoose.Schema({
 
 // ── Auto-generate patientCode before first save ───────────────────────────────
 // Finds the highest existing sequential number and increments it.
-patientSchema.pre('save', async function (next) {
-  if (this.patientCode) return next();   // already assigned, skip
+patientSchema.pre('save', async function () {
+  if (this.patientCode) return;   // already assigned, skip
 
   try {
     // Get the patient with the highest code by sorting descending
@@ -29,9 +29,8 @@ patientSchema.pre('save', async function (next) {
     }
 
     this.patientCode = `CN-${String(seq).padStart(4, '0')}`;
-    next();
   } catch (err) {
-    next(err);
+    throw err;
   }
 });
 

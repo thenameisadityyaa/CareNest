@@ -10,6 +10,7 @@ const rateLimit = require('express-rate-limit');
 const authRoutes    = require('./routes/authRoutes');
 const healthRoutes  = require('./routes/healthRoutes');
 const patientRoutes = require('./routes/patientRoutes');
+const adminRoutes   = require('./routes/adminRoutes');
 
 const app    = express();
 const server = http.createServer(app);
@@ -17,6 +18,7 @@ const server = http.createServer(app);
 // ─── Environment Variables (Production Ready) ───────────────────────────────
 const PORT       = process.env.PORT || 5000;
 const MONGO_URI   = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/carenest';
+console.log('📡 DB Connection:', MONGO_URI.includes('mongodb+srv') ? 'ATLAS (Cloud)' : 'LOCAL (127.0.0.1)');
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 // ─── Socket.io ───────────────────────────────────────────────────────────────
@@ -65,6 +67,7 @@ app.use(cors({ origin: CORS_ORIGIN }));
 app.use('/auth', authRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Root route for monitoring
 app.get('/', (req, res) => res.send('CareNest API is running...'));

@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Search, UserCheck, AlertCircle, ChevronRight, Activity } from 'lucide-react';
 
+import { useAuth } from '../../context/AuthContext';
+
 /**
- * PatientLookup — gating page for Care Managers
+ * PatientLookup — gating page for Parents, Children, and Managers
  *
  * Props:
  *   onFound(patient) — called when a valid patient code is resolved
  *   token           — JWT for the Authorization header
  */
-const PatientLookup = ({ onFound, token }) => {
+const PatientLookup = ({ onFound, token, onLogout }) => {
+  const { user } = useAuth();
+  const userRole = user?.role;
   const [code,    setCode]    = useState('');
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
@@ -61,10 +65,12 @@ const PatientLookup = ({ onFound, token }) => {
             <Search size={26} color="#fff" />
           </div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#1E293B', margin: '0 0 6px' }}>
-            Patient Lookup
+            {userRole === 'parent' ? 'Find Your Child' : userRole === 'child' ? 'Access Your Records' : 'Patient Lookup'}
           </h1>
           <p style={{ fontSize: '14px', color: '#64748B', margin: 0 }}>
-            Enter a patient code to access their health records
+            {userRole === 'parent' ? "Enter your child's unique ID to view their health metrics" : 
+             userRole === 'child' ? 'Enter your unique patient ID to access your dashboard' :
+             'Enter a patient code to access their health records'}
           </p>
         </div>
 
@@ -76,7 +82,7 @@ const PatientLookup = ({ onFound, token }) => {
           <form onSubmit={handleSearch}>
             <label style={{ fontSize: '12px', fontWeight: 700, color: '#64748B',
               textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 8 }}>
-              Patient Code
+              {userRole === 'parent' ? 'Child ID' : userRole === 'child' ? 'Patient ID' : 'Patient Code'}
             </label>
 
             <div style={{ display: 'flex', gap: 10 }}>
@@ -191,6 +197,23 @@ const PatientLookup = ({ onFound, token }) => {
         <p style={{ textAlign: 'center', fontSize: '12px', color: '#94A3B8', marginTop: 20 }}>
           Patient codes are assigned automatically on registration (e.g. CN-0001)
         </p>
+
+        {onLogout && (
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <button 
+              onClick={onLogout}
+              style={{
+                background: 'none', border: 'none', color: '#64748B', 
+                fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                textDecoration: 'underline', transition: 'color 0.2s'
+              }}
+              onMouseOver={e => e.currentTarget.style.color = '#1E293B'}
+              onMouseOut={e => e.currentTarget.style.color = '#64748B'}
+            >
+              Log out and switch account
+            </button>
+          </div>
+        )}
 
         <style>{`
           @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

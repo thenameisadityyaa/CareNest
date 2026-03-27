@@ -5,8 +5,8 @@ const Alert      = require('../models/Alert');
 const { auth, authorizeRoles } = require('../middleware/auth');
 
 // ─── POST /api/health ─────────────────────────────────────────────────────────
-// Accessible by: Care Manager, Child
-router.post('/health', auth, authorizeRoles('caremanager', 'child'), async (req, res) => {
+// Accessible by: Care Manager, Child, Admin
+router.post('/health', auth, authorizeRoles('caremanager', 'child', 'admin'), async (req, res) => {
   try {
     const io = req.app.get('io');   // Socket.io instance injected by server.js
     const { patientId, heartRate, oxygen, bpSystolic, bpDiastolic } = req.body;

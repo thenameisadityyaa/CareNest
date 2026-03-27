@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   Heart, Wind, Activity, AlertCircle, FileText,
-  User, Flame, Moon, TrendingUp, Zap,
+  User, Flame, Moon, TrendingUp, Zap, Shield,
   Calendar, Clock, CheckCircle2, ArrowUpRight,
   Droplets, Thermometer, ChevronRight
 } from 'lucide-react';
@@ -158,6 +158,21 @@ export default function Dashboard() {
       background: '#F0F4FF', minHeight: '100%', overflowX: 'hidden'
     }}>
 
+      {/* ── Super Admin Banner ──────────────────────────────────────────────── */}
+      {user.role === 'admin' && (
+        <div style={{
+          background: '#FFF7ED', border: '1px solid #FFEDD5', borderRadius: '16px',
+          padding: '12px 20px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px',
+          boxShadow: '0 2px 8px rgba(251,146,60,0.1)'
+        }}>
+          <Shield size={20} color="#F97316" />
+          <div>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#9A3412' }}>Super Admin Global Access</p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#C2410C' }}>You have unrestricted access to all patient data, system logs, and administrative controls.</p>
+          </div>
+        </div>
+      )}
+
       {/* ── Quick Tip Banner ───────────────────────────────────────────────── */}
       <div style={{
         background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)',
@@ -212,7 +227,7 @@ export default function Dashboard() {
           </div>
           <p style={{ fontWeight: 700, fontSize: '15px', color: '#1E293B', margin: 0 }}>{user.name}</p>
           <p style={{ fontSize: '11px', color: '#94A3B8', margin: '3px 0 8px', textTransform: 'capitalize' }}>
-            {user.role === 'caremanager' ? 'Care Manager' : user.role}
+            {user.role === 'admin' ? 'Super Administrator' : user.role === 'caremanager' ? 'Care Manager' : user.role}
           </p>
 
           {/* Patient Code badge */}

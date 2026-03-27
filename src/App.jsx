@@ -9,27 +9,30 @@ import Register from './pages/Auth/Register';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword';
 import PatientLookup from './pages/PatientLookup/PatientLookup';
+import UserManagement from './pages/Admin/UserManagement';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { HealthDataProvider } from './context/HealthDataContext';
 import { useHealthData } from './context/HealthDataContext';
 
-// ── Care Manager gate ─────────────────────────────────────────────────────────
-// Shows the PatientLookup page until the manager has selected a patient.
-// Once a patient is found, calls switchPatient() and renders children.
-const CareManagerGate = ({ children }) => {
-  const { user, token } = useAuth();
+// ── Patient Lookup Gate ──────────────────────────────────────────────────────
+// Shows the PatientLookup page until a patient is selected.
+// - Admin/CareManager: Bypass (Global Access)
+// - Parent/Child: Requirement (Must search via ID)
+const PatientLookupGate = ({ children }) => {
+  const { user, token, logout } = useAuth();
   const { patientInfo, switchPatient } = useHealthData();
 
-  // Only apply the gate to caremanager role
-  if (user?.role !== 'caremanager') return children;
+  // Admin and Care Manager are most powerful and bypass the lookup gate
+  if (user?.role === 'admin' || user?.role === 'caremanager') return children;
 
-  // If patient is already loaded (either their own or a looked-up one), show dashboard
+  // Parents and Children must find their specific patient record
   if (patientInfo) return children;
 
   return (
     <PatientLookup
       token={token}
       onFound={(patient) => switchPatient(patient)}
+      onLogout={logout}
     />
   );
 };
@@ -51,11 +54,11 @@ const ProtectedRoute = ({ children }) => {
   );
 };
 
-// ── Layout with the Care Manager gate applied ─────────────────────────────────
+// ── Layout with the Patient Lookup gate applied ──────────────────────────────
 const GatedLayout = () => (
-  <CareManagerGate>
+  <PatientLookupGate>
     <Layout />
-  </CareManagerGate>
+  </PatientLookupGate>
 );
 
 function AppRoutes() {
@@ -80,6 +83,7 @@ function AppRoutes() {
         <Route path="dashboard"  element={<Dashboard />} />
         <Route path="add-data"   element={<AddDataForm />} />
         <Route path="alerts"     element={<AlertsPanel />} />
+        <Route path="admin/users" element={<UserManagement />} />
       </Route>
     </Routes>
   );

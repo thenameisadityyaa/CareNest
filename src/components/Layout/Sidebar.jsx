@@ -10,9 +10,10 @@ const Sidebar = ({ onClose }) => {
   const { patientInfo, switchPatient } = useHealthData();
 
   const navItems = [
-    { name: 'Dashboard',       path: '/dashboard', icon: LayoutDashboard, roles: ['parent', 'child', 'manager', 'caremanager'] },
-    { name: 'Log Health Data', path: '/add-data',  icon: Activity,        roles: ['child', 'manager', 'caremanager'] },
-    { name: 'Alerts',          path: '/alerts',    icon: Bell,            roles: ['parent', 'child', 'manager', 'caremanager'] },
+    { name: 'Dashboard',       path: '/dashboard', icon: LayoutDashboard, roles: ['parent', 'child', 'caremanager', 'admin'] },
+    { name: 'Log Health Data', path: '/add-data',  icon: Activity,        roles: ['caremanager', 'admin'] },
+    { name: 'Alerts',          path: '/alerts',    icon: Bell,            roles: ['parent', 'child', 'caremanager', 'admin'] },
+    { name: 'User Management', path: '/admin/users', icon: Search,          roles: ['admin'] },
   ];
 
   const visibleNavItems = navItems.filter(item => item.roles.includes(userRole));
@@ -60,17 +61,17 @@ const Sidebar = ({ onClose }) => {
             Signed in as
           </p>
           <p style={{ fontSize: '13px', fontWeight: 700, color: '#fff', textTransform: 'capitalize', margin: '2px 0 0' }}>
-            {userRole === 'caremanager' ? 'Care Manager' : userRole === 'parent' ? 'Parent' : 'Child (Read-only)'}
+            {userRole === 'admin' || userRole === 'caremanager' ? 'Care Manager / Admin' : userRole === 'parent' ? 'Parent' : 'Child (Read-only)'}
           </p>
         </div>
       </div>
 
-      {/* Active patient code badge (Care Manager only) */}
-      {userRole === 'caremanager' && patientInfo?.patientCode && (
+      {/* Active patient code badge */}
+      {patientInfo?.patientCode && (
         <div style={{ padding: '0 20px 8px' }}>
           <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '6px', padding: '7px 14px' }}>
             <p style={{ fontSize: '9px', fontWeight: 700, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.07em', margin: 0 }}>
-              Active Patient
+              Viewing Patient
             </p>
             <p style={{ fontSize: '13px', fontWeight: 800, color: '#14BEF0', fontFamily: 'monospace', margin: '2px 0 0' }}>
               {patientInfo.patientCode}
@@ -113,8 +114,8 @@ const Sidebar = ({ onClose }) => {
           );
         })}
 
-        {/* Switch Patient — Care Manager only */}
-        {userRole === 'caremanager' && (
+        {/* Switch Patient — Manager or Parent only */}
+        {(userRole === 'caremanager' || userRole === 'admin' || userRole === 'parent') && (
           <button
             onClick={handleSwitchPatient}
             style={{
@@ -129,7 +130,7 @@ const Sidebar = ({ onClose }) => {
             onMouseOut={e => e.currentTarget.style.background = 'rgba(20,190,240,0.12)'}
           >
             <Search size={16} />
-            Switch Patient
+            {userRole === 'parent' ? 'Search Child' : 'Switch Patient'}
           </button>
         )}
       </nav>

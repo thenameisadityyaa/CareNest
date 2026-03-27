@@ -9,7 +9,7 @@ router.get('/me', auth, async (req, res) => {
   try {
     const role = req.user.role;
     let query  = {};
-    if (role === 'caremanager') query = { careManagerId: req.user._id };
+    if (role === 'admin' || role === 'caremanager') query = {}; // Managers see all
     else if (role === 'parent') query = { parentId: req.user._id };
     else if (role === 'child')  query = { childId: req.user._id };
 
@@ -22,8 +22,8 @@ router.get('/me', auth, async (req, res) => {
 
 // ── GET /api/patients/lookup?code=CN-0001 ─────────────────────────────────────
 // Care Manager enters a patient code — returns that patient if it exists.
-// Restricted to caremanager role only.
-router.get('/lookup', auth, authorizeRoles('caremanager'), async (req, res) => {
+// Restricted to caremanager, admin, and parent roles.
+router.get('/lookup', auth, authorizeRoles('caremanager', 'admin', 'parent'), async (req, res) => {
   try {
     const { code } = req.query;
 

@@ -57,10 +57,18 @@ router.post('/register', async (req, res) => {
     else if (standardizedRole === 'parent') dummyPatient.parentId = savedUser._id;
     else if (standardizedRole === 'child') dummyPatient.childId = savedUser._id;
     
-    await dummyPatient.save();
+    const savedPatient = await dummyPatient.save();
 
     const token = jwt.sign({ _id: savedUser._id, role: savedUser.role }, process.env.JWT_SECRET || 'fallback_secret_key', { expiresIn: '1d' });
-    res.status(201).json({ token, user: { id: savedUser._id, name: savedUser.name, role: savedUser.role } });
+    res.status(201).json({ 
+      token, 
+      user: { 
+        id: savedUser._id, 
+        name: savedUser.name, 
+        role: savedUser.role,
+        patientCode: savedPatient.patientCode 
+      } 
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

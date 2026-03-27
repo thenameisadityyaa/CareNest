@@ -15,10 +15,12 @@ const auth = (req, res, next) => {
 
 const authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: `Access denied. Role ${req.user.role} is not authorized.` });
+    // Admin and Care Manager are most powerful and can access everything
+    const superRoles = ['admin', 'caremanager'];
+    if (superRoles.includes(req.user.role) || roles.includes(req.user.role)) {
+      return next();
     }
-    next();
+    return res.status(403).json({ message: `Access denied. Role ${req.user.role} is not authorized.` });
   };
 };
 

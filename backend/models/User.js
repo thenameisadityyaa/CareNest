@@ -7,7 +7,11 @@ const userSchema = new mongoose.Schema({
   role: { 
     type: String, 
     required: true, 
-    enum: ['caremanager', 'parent', 'child'] 
+    enum: ['caremanager', 'parent', 'child', 'admin'] 
+  },
+  isActive: { 
+    type: Boolean, 
+    default: true 
   },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date }
