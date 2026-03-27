@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --color-practo-navy: #0F172A;
+  --color-practo-cyan: #2563EB;
+  --color-practo-cyan-hover: #1D4ED8;
+  --color-practo-text: #334155;
+  --color-practo-muted: #64748B;
+  --color-practo-bg: #F8FAFC;
+  --color-practo-border: #E2E8F0;
+  --color-practo-card: #FFFFFF;
+
+  --color-critical: #EF4444;
+  --color-critical-bg: #FEF2F2;
+  --color-critical-border: #FCA5A5;
+  
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-border: #FCD34D;
+  
+  --color-normal: #10B981;
+  --color-normal-bg: #ECFDF5;
+  --color-normal-border: #6EE7B7;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--color-practo-bg);
+    color: var(--color-practo-text);
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Professional SaaS Button styles */
+.btn-cyan {
+  background-color: var(--color-practo-cyan);
+  color: #fff;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 4px;
+  padding: 8px 16px;
+  transition: all 0.15s ease-in-out;
+  border: 1px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.btn-cyan:hover {
+  background-color: var(--color-practo-cyan-hover);
+}
+.btn-cyan:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-practo-text);
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 4px;
+  padding: 8px 16px;
+  border: 1px solid var(--color-practo-border);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background-color: #F1F5F9;
+  color: #0F172A;
+}
+
+/* Stark Clinical Card shadow */
+.card-shadow {
+  background: #fff;
+  border: 1px solid var(--color-practo-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+/* Status pills */
+.status-normal  { background:var(--color-normal-bg); color: var(--color-normal); border: 1px solid var(--color-normal-border); }
+.status-warning { background:var(--color-warning-bg); color: var(--color-warning); border: 1px solid var(--color-warning-border); }
+.status-critical{ background:var(--color-critical-bg); color: var(--color-critical); border: 1px solid var(--color-critical-border); }
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ── Responsive Sidebar Overlay ────────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 40;
+}
+
+/* Desktop: sidebar sits in normal flow */
+.sidebar-wrapper {
+  flex-shrink: 0;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Dashboard grid: Row 3 — Chart | Calendar | Log ────────────────────────── */
+/* Uses minmax so columns never overflow their container */
+.dash-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 220px) minmax(0, 280px);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ── Dashboard grid: Row 4 — Alerts | Tests | Stats ────────────────────────── */
+.dash-grid-4-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 230px) minmax(0, 260px);
+  gap: 16px;
+}
+
+/* ── Row 1 — Profile | Vitals ───────────────────────────────────────────────── */
+.dash-grid-cm {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ── Vital + Category 4-column grids ────────────────────────────────────────── */
+.dash-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* ── Mobile (≤ 768px) ─────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Sidebar slides in as overlay */
+  .sidebar-wrapper {
+    position: fixed !important;
+    left: -260px;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    width: 250px !important;
+  }
+  .sidebar-wrapper.open {
+    left: 0;
+  }
+  .sidebar-overlay.open {
+    display: block;
+  }
+
+  /* Main content fills full width */
+  .layout-main {
+    padding: 12px !important;
+  }
+
+  /* All dashboard grids stack to a single column */
+  .dash-grid-4      { grid-template-columns: repeat(2, 1fr) !important; }
+  .dash-grid-cm     { grid-template-columns: 1fr !important; }
+  .dash-grid-3      { grid-template-columns: 1fr !important; }
+  .dash-grid-4-row  { grid-template-columns: 1fr !important; }
+
+  /* Navbar */
+  .navbar-time-label { display: none; }
+  .navbar-user-text  { display: none; }
+  .navbar-padding    { padding: 0 16px !important; }
+  .hamburger-btn     { display: flex !important; }
+  .sidebar-close-btn { display: flex !important; }
+
+  /* Prevent any card from causing horizontal scroll */
+  * { max-width: 100%; box-sizing: border-box; }
+}
+
+/* ── Small mobile (≤ 480px) ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .dash-grid-4 { grid-template-columns: 1fr !important; }
+  .layout-main { padding: 8px !important; }
+}
+
+
